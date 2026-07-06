@@ -1,0 +1,1 @@
+function launchFireworks(){console.log('fireworks');}
