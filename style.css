@@ -1,6 +1,346 @@
-body{margin:0;font-family:Arial;background:#08111f;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh}
-.container{text-align:center}.cake-scene{perspective:1200px}.cake{width:220px;height:220px;position:relative;transform:rotateX(60deg)}
-.cake-top{width:220px;height:220px;border-radius:50%;background:pink;position:relative}.cake-side{height:80px;background:#ff7aa8}
-.candle{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%) rotateX(-60deg)}
-.wick{width:2px;height:8px;background:#333;margin:auto}.flame{width:16px;height:24px;background:radial-gradient(circle at 50% 70%,#ffd54f,#ff9800 60%,#fff 61%,#7ec8ff 100%);border-radius:50% 50% 50% 50%;animation:f .15s infinite alternate;box-shadow:0 0 25px orange}.smoke{display:none}
-@keyframes f{from{transform:scale(1)}to{transform:scale(.9) rotate(3deg)}}
+/* ===========================
+   RESET
+=========================== */
+
+* {
+  box-sizing: border-box;
+}
+
+/* ===========================
+   ROOT VARIABLES
+=========================== */
+
+:root {
+  --tongue: hsl(4, 80%, 42%);
+  --pupil: hsl(0, 0%, 100%);
+  --icing: hsl(0, 0%, 95%);
+  --stroke: hsl(0, 0%, 10%);
+}
+
+/* ===========================
+   BODY
+=========================== */
+
+body {
+  --frosting-hue: 0;
+  --lightness: 50;
+  --flame: 0;
+
+  --glow-hue: 40;
+  --glow-saturation: 50;
+  --glow-lightness: 35;
+  --glow-alpha: 0.4;
+
+  --transparency-alpha: 0;
+
+  --frosting: hsl(var(--frosting-hue), 100%, 55%);
+  --glow: hsla(
+    var(--glow-hue),
+    calc(var(--glow-saturation) * 1%),
+    calc(var(--glow-lightness) * 1%),
+    var(--glow-alpha)
+  );
+
+  --transparent: hsla(
+    0,
+    0%,
+    0%,
+    var(--transparency-alpha)
+  );
+
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  background: hsl(
+    180,
+    30%,
+    calc(var(--lightness) * 1%)
+  );
+}
+
+/* ===========================
+   WHITESPACE
+=========================== */
+
+.whitespace {
+  width: 7px;
+}
+
+/* ===========================
+   BIRTHDAY BUTTON
+=========================== */
+
+.birthday-button {
+  position: relative;
+  transform: scale(0.6);
+  cursor: pointer;
+}
+
+/* Text */
+
+.birthday-button__text {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.birthday-button__text .char {
+  display: inline-block;
+
+  color: hsl(
+    var(--hue, 0),
+    calc(var(--char-sat, 0) * 1%),
+    calc(var(--char-light, 0) * 1%)
+  );
+}
+
+/* Glow */
+
+.birthday-button::before {
+  content: "";
+
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -70%)
+    scale(calc(var(--flame) * 3));
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(var(--glow), var(--transparent) 30%),
+    radial-gradient(var(--glow), var(--transparent) 50%);
+
+  filter: blur(15px);
+
+  opacity: var(--flame);
+
+  z-index: 2;
+}
+
+.birthday-button::after {
+  content: "";
+
+  position: absolute;
+
+  width: 400px;
+  height: 30px;
+
+  top: 100%;
+  left: 50%;
+
+  transform: translate(-50%, -50%)
+    scale(calc(var(--flame)));
+
+  background:
+    radial-gradient(var(--glow), var(--transparent) 20%),
+    radial-gradient(var(--glow), var(--transparent));
+
+  filter: blur(15px);
+
+  opacity: var(--flame);
+}
+
+/* Button */
+
+.birthday-button__button {
+  position: relative;
+
+  width: 240px;
+  height: 100px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: var(--icing);
+
+  cursor: pointer;
+}
+
+/* Cake SVG */
+
+.birthday-button__cake {
+  position: absolute;
+
+  bottom: 0;
+  left: 50%;
+
+  width: 289.5px;
+
+  transform: translate(-50%, 0);
+
+  display: none;
+}
+
+/* ===========================
+   CAKE
+=========================== */
+
+.cake__eye-body {
+  fill: var(--stroke);
+}
+
+.cake__eye-pupil {
+  fill: var(--pupil);
+}
+
+.cake__tongue {
+  fill: var(--tongue);
+}
+
+.cake__mouth-opening {
+  fill: var(--stroke);
+  stroke: var(--stroke);
+}
+
+/* ===========================
+   SPRINKLES
+=========================== */
+
+.cake__sprinkle {
+  --sprinkle: hsl(
+    var(--sprinkle-hue, 0),
+    100%,
+    75%
+  );
+
+  fill: var(--sprinkle);
+}
+
+/* ===========================
+   FROSTING
+=========================== */
+
+.cake__frosting--start {
+  fill: var(--frosting);
+}
+
+.cake__frosting--duplicate {
+  fill: var(--frosting);
+}
+
+/* ===========================
+   CANDLE FLAME
+=========================== */
+
+.candle__flame {
+  opacity: var(--flame, 0);
+}
+
+.candle__flame-outer {
+  fill: hsl(22, 100%, 56%);
+}
+
+.candle__flame-inner {
+  fill: hsl(50, 85%, 52%);
+}
+
+/* ===========================
+   FACE
+=========================== */
+
+.face__stroke {
+  stroke: var(--stroke);
+}
+
+/* ===========================
+   CANDLES
+=========================== */
+
+.cake__candle:nth-of-type(1) {
+  --flame: 0;
+}
+
+.cake__candle:nth-of-type(2) {
+  --flame: 0;
+}
+
+.cake__candle:nth-of-type(3) {
+  --flame: 0;
+}
+
+/* ===========================
+   SOUND TOGGLE
+=========================== */
+
+label {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+
+  width: 44px;
+  height: 44px;
+
+  cursor: pointer;
+}
+
+label > svg {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+label path {
+  fill: hsl(180, 20%, 35%);
+}
+
+/* Ikon "Sound On" disembunyikan secara default */
+label svg:nth-of-type(1) {
+  display: none;
+}
+
+/* ===========================
+   HIDDEN CHECKBOX
+=========================== */
+
+input[type="checkbox"] {
+  position: absolute;
+
+  top: 0;
+  left: 100%;
+
+  width: 0;
+  height: 0;
+
+  /* Jika ingin checkbox benar-benar tidak terlihat,
+     bisa tambahkan:
+     opacity: 0;
+  */
+}
+
+/* ===========================
+   CHECKED STATE
+=========================== */
+
+input[type="checkbox"]:checked ~ label svg:nth-of-type(1) {
+  display: block;
+}
+
+input[type="checkbox"]:checked ~ label svg:nth-of-type(2) {
+  display: none;
+}
